@@ -1675,6 +1675,106 @@ export default function Home() {
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-white transition-colors"
+'use client'
+
+import { cn } from '@/lib/utils'
+import { useState, useEffect, useRef } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { Instagram, Linkedin, Github, ChevronDown } from 'lucide-react'
+import { dict } from '@/app/dictionary'
+
+export default function Home() {
+  const [lang, setLang] = useState('en')
+  const [dir, setDir] = useState('ltr')
+  const [translations, setTranslations] = useState(dict.en)
+  const bubblesRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const browserLang = navigator.language.split('-')[0]
+    if (browserLang === 'ar') {
+      setLang('ar')
+      setDir('rtl')
+      setTranslations(dict.ar)
+    } else {
+      setLang('en')
+      setDir('ltr')
+      setTranslations(dict.en)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (bubblesRef.current) {
+      const bubbleCount = 50
+      for (let i = 0; i < bubbleCount; i++) {
+        const bubble = document.createElement('div')
+        bubble.className = 'bubble'
+        const size = `${Math.random() * 4 + 1}rem`
+        bubble.style.width = size
+        bubble.style.height = size
+        bubble.style.left = `${Math.random() * 100}%`
+        bubble.style.animationDuration = `${Math.random() * 10 + 5}s`
+        bubble.style.animationDelay = `${Math.random() * 5}s`
+        bubblesRef.current.appendChild(bubble)
+      }
+    }
+  }, [])
+
+  const toggleLanguage = () => {
+    if (lang === 'en') {
+      setLang('ar')
+      setDir('rtl')
+      setTranslations(dict.ar)
+    } else {
+      setLang('en')
+      setDir('ltr')
+      setTranslations(dict.en)
+    }
+  }
+
+  return (
+    <>
+      <div className="bg-bubbles" ref={bubblesRef} />
+      <main
+        className={cn(
+          'flex flex-col items-center justify-center min-h-screen p-4 sm:p-8',
+          'bg-gradient-to-br from-gray-900 to-black text-white'
+        )}
+      >
+        <div className="absolute top-4 right-4 z-20">
+          <button
+            onClick={toggleLanguage}
+            className="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition-colors"
+          >
+            {lang === 'en' ? 'العربية' : 'English'}
+          </button>
+        </div>
+
+        <div className="z-10 text-center">
+          <div className="relative w-40 h-40 sm:w-48 sm:h-48 mx-auto mb-6">
+            <Image
+              src="/profile.png"
+              alt="Mohamed Ikram"
+              width={200}
+              height={200}
+              priority
+              className="rounded-full object-cover border-4 border-gray-700 shadow-lg"
+            />
+          </div>
+
+          <h1 className="text-4xl sm:text-5xl font-bold mb-2">
+            {translations.name}
+          </h1>
+          <h2 className="text-xl sm:text-2xl text-gray-300 mb-6">
+            {translations.title}
+          </h2>
+
+          <div className="flex justify-center space-x-6 mb-8">
+            <Link
+              href="https://www.instagram.com/ikram__official/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-white transition-colors"
               aria-label="Instagram"
             >
               <Instagram size={28} />
@@ -1773,10 +1873,3 @@ export default function Home() {
     </>
   )
 }
- </section>
-
-        {/* WHY CHOOSE US */}
-        <section className="card">
-          <h2>{t('whyTitle')}</h2>
-          <div className="why-grid">
-            <div className="why-item          <div className="svc"><div className="ico">✓</div><div>{t('pc3')}</div></div>
