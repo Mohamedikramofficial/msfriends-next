@@ -1575,105 +1575,205 @@ export default function HomePage() {
           <form onSubmit={handleSubmit}>
             <div className="row two">
               <div>
-                <label>{t('lblName')}</label>
-                <input name="name" required placeholder={lang === 'ar' ? 'اسمك' : 'Your name'} />
-              </div>
-              <div>
-                <label>{t('lblPhone')}</label>
-                <input name="phone" required placeholder="9745xxxxxx" inputMode="tel" />
-              </div>
-            </div>
-            <div className="row two">
-              <div>
-                <label>{t('lblService')}</label>
-                <select name="service" required>
-                  <option>{t('pc1')}</option>
-                  <option>{lang === 'ar' ? 'مكافحة البعوض والذباب' : 'Mosquito/Fly Control'}</option>
-                  <option>{lang === 'ar' ? 'تنظيف منزلي' : 'Home Cleaning'}</option>
-                  <option>{t('res2')}</option>
-                  <option>{lang === 'ar' ? 'غسيل الأرائك والسجاد' : 'Sofa & Carpet Shampoo'}</option>
-                  <option>{t('sp1')}</option>
-                  <option>{t('sp2')}</option>
-                  <option>{t('sp4')}</option>
-                  <option>{t('sp5')}</option>
-                  <option>{lang === 'ar' ? 'تنظيف المكاتب / التجاري' : 'Office/Commercial Cleaning'}</option>
-                </select>
-              </div>
-              <div>
-                <label>{t('lblDate')}</label>
-                <input name="date" type="date" required />
-              </div>
-            </div>
-            <div className="row two">
-              <div>
-                <label>{t('lblTime')}</label>
-                <input name="time" type="time" required />
-              </div>
-              <div>
-                <label>{t('lblPlace')}</label>
-                <input name="place" required placeholder={lang === 'ar' ? 'المنطقة، البرج/الفيلا، رقم الشقة، ملاحظات الموقف' : 'Area, tower/villa, flat #, parking notes'} />
-              </div>
-            </div>
-            <div className="row">
-              <div>
-                <label>{t('lblNotes')}</label>
-                <textarea name="notes" placeholder={lang === 'ar' ? 'مثال: شقة غرفتين؛ صراصير في المطبخ؛ الرجاء إحضار سلّم.' : 'E.g., 2BHK; kitchen cockroaches; please bring ladder.'} />
-              </div>
-            </div>
-            <div className="submit">
-              <button className="btn btn-primary" type="submit">{t('sendBtn')}</button>
-            </div>
-          </form>
-        </section>
+'use client'
 
-        {/* SERVICES */}
-        <section className="card" id="services">
-          <h2>{t('servicesTitle')}</h2>
+import { cn } from '@/lib/utils'
+import { useState, useEffect, useRef } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { Instagram, Linkedin, Github, ChevronDown } from 'lucide-react'
+import { dict } from '@/app/dictionary'
 
-          <div className="svc-cat">
-            <h3>{t('catRes')}</h3>
-            <div className="svc-list">
-              <div className="svc"><div className="ico">✓</div><div>{t('res1')}</div></div>
-              <div className="svc"><div className="ico">✓</div><div>{t('res2')}</div></div>
-              <div className="svc"><div className="ico">✓</div><div>{t('res3')}</div></div>
-              <div className="svc"><div className="ico">✓</div><div>{t('res4')}</div></div>
-              <div className="svc"><div className="ico">✓</div><div>{t('res5')}</div></div>
-            </div>
+export default function Home() {
+  const [lang, setLang] = useState('en')
+  const [dir, setDir] = useState('ltr')
+  const [translations, setTranslations] = useState(dict.en)
+  const bubblesRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const browserLang = navigator.language.split('-')[0]
+    if (browserLang === 'ar') {
+      setLang('ar')
+      setDir('rtl')
+      setTranslations(dict.ar)
+    } else {
+      setLang('en')
+      setDir('ltr')
+      setTranslations(dict.en)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (bubblesRef.current) {
+      const bubbleCount = 50
+      for (let i = 0; i < bubbleCount; i++) {
+        const bubble = document.createElement('div')
+        bubble.className = 'bubble'
+        const size = `${Math.random() * 4 + 1}rem`
+        bubble.style.width = size
+        bubble.style.height = size
+        bubble.style.left = `${Math.random() * 100}%`
+        bubble.style.animationDuration = `${Math.random() * 10 + 5}s`
+        bubble.style.animationDelay = `${Math.random() * 5}s`
+        bubblesRef.current.appendChild(bubble)
+      }
+    }
+  }, [])
+
+  const toggleLanguage = () => {
+    if (lang === 'en') {
+      setLang('ar')
+      setDir('rtl')
+      setTranslations(dict.ar)
+    } else {
+      setLang('en')
+      setDir('ltr')
+      setTranslations(dict.en)
+    }
+  }
+
+  return (
+    <>
+      <div className="bg-bubbles" ref={bubblesRef} />
+      <main
+        className={cn(
+          'flex flex-col items-center justify-center min-h-screen p-4 sm:p-8',
+          'bg-gradient-to-br from-gray-900 to-black text-white'
+        )}
+      >
+        <div className="absolute top-4 right-4 z-20">
+          <button
+            onClick={toggleLanguage}
+            className="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition-colors"
+          >
+            {lang === 'en' ? 'العربية' : 'English'}
+          </button>
+        </div>
+
+        <div className="z-10 text-center">
+          <div className="relative w-40 h-40 sm:w-48 sm:h-48 mx-auto mb-6">
+            <Image
+              src="/profile.png"
+              alt="Mohamed Ikram"
+              width={200}
+              height={200}
+              priority
+              className="rounded-full object-cover border-4 border-gray-700 shadow-lg"
+            />
           </div>
 
-          <div className="svc-cat">
-            <h3>{t('catCom')}</h3>
-            <div className="svc-list">
-              <div className="svc"><div className="ico">✓</div><div>{t('com1')}</div></div>
-              <div className="svc"><div className="ico">✓</div><div>{t('com2')}</div></div>
-              <div className="svc"><div className="ico">✓</div><div>{t('com3')}</div></div>
-              <div className="svc"><div className="ico">✓</div><div>{t('com4')}</div></div>
-              <div className="svc"><div className="ico">✓</div><div>{t('com5')}</div></div>
-            </div>
+          <h1 className="text-4xl sm:text-5xl font-bold mb-2">
+            {translations.name}
+          </h1>
+          <h2 className="text-xl sm:text-2xl text-gray-300 mb-6">
+            {translations.title}
+          </h2>
+
+          <div className="flex justify-center space-x-6 mb-8">
+            <Link
+              href="https://www.instagram.com/ikram__official/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-white transition-colors"
+              aria-label="Instagram"
+            >
+              <Instagram size={28} />
+            </Link>
+            <Link
+              href="https://www.linkedin.com/in/mohamed-ikram-35a113264/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-white transition-colors"
+              aria-label="LinkedIn"
+            >
+              <Linkedin size={28} />
+            </Link>
+            <Link
+              href="https://github.com/Mohamedikramofficial"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-white transition-colors"
+              aria-label="GitHub"
+            >
+              <Github size={28} />
+            </Link>
           </div>
 
-          <div className="svc-cat">
-            <h3>{t('catSpec')}</h3>
-            <div className="svc-list">
-              <div className="svc"><div className="ico">✓</div><div>{t('sp1')}</div></div>
-              <div className="svc"><div className="ico">✓</div><div>{t('sp2')}</div></div>
-              <div className="svc"><div className="ico">✓</div><div>{t('sp3')}</div></div>
-              <div className="svc"><div className="ico">✓</div><div>{t('sp4')}</div></div>
-              <div className="svc"><div className="ico">✓</div><div>{t('sp5')}</div></div>
+          <div className="max-w-3xl mx-auto space-y-6">
+            <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg">
+              <h3 className="text-2xl font-semibold mb-3">
+                {translations.about.title}
+              </h3>
+              <p className="text-gray-300 leading-relaxed">
+                {translations.about.description}
+              </p>
             </div>
-          </div>
 
-          <div className="svc-cat">
-            <h3>{t('catPest')}</h3>
-            <div className="svc-list">
-              <div className="svc"><div className="ico">✓</div><div>{t('pc1')}</div></div>
-              <div className="svc"><div className="ico">✓</div><div>{t('pc2')}</div></div>
-              <div className="svc"><div className="ico">✓</div><div>{t('pc3')}</div></div>
-              <div className="svc"><div className="ico">✓</div><div>{t('pc4')}</div></div>
-              <div className="svc"><div className="ico">✓</div><div>{t('pc5')}</div></div>
+            <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg">
+              <h3 className="text-2xl font-semibold mb-4">
+                {translations.skills.title}
+              </h3>
+              <div className="flex flex-wrap justify-center gap-3">
+                {translations.skills.list.map((skill) => (
+                  <span
+                    key={skill}
+                    className="bg-gray-700 text-white px-4 py-2 rounded-full text-sm"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg">
+              <h3 className="text-2xl font-semibold mb-4">
+                {translations.projects.title}
+              </h3>
+              <div className="space-y-4">
+                <div className="text-left">
+                  <h4 className="font-bold text-lg">
+                    {translations.projects.project1.title}
+                  </h4>
+                  <p className="text-gray-400">
+                    {translations.projects.project1.description}
+                  </p>
+                </div>
+                <div className="text-left">
+                  <h4 className="font-bold text-lg">
+                    {translations.projects.project2.title}
+                  </h4>
+                  <p className="text-gray-400">
+                    {translations.projects.project2.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg">
+              <h3 className="text-2xl font-semibold mb-3">
+                {translations.contact.title}
+              </h3>
+              <p className="text-gray-300 mb-4">
+                {translations.contact.description}
+              </p>
+              <Link
+                href="mailto:mohamedikram.me@gmail.com"
+                className="inline-block bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
+              >
+                {translations.contact.button}
+              </Link>
             </div>
           </div>
-        </section>
+        </div>
+
+        <div className="absolute bottom-8 animate-bounce">
+          <ChevronDown size={24} className="text-gray-500" />
+        </div>
+      </main>
+    </>
+  )
+}
+ </section>
 
         {/* WHY CHOOSE US */}
         <section className="card">
